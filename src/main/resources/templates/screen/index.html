@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/common :: head('Hello Mybatis')"></head>
+<body>
+<div th:replace="fragment/common :: header('家計費管理')"></div>
+<div class="mx-auto w-50 mt-5  mb-4 d-flex flex-row justify-content-between">
+ 		<div>家計費一覧</div>
+		<a th:href="@{/expense/create}" class="btn btn-primary px-3" style="border-radius:10px"><i class="bi bi-plus-circle-fill"></i>&nbsp;&nbsp;&nbsp;追加</a>
+ 	</div>
+	<div class="mx-auto my-5 w-50">
+		<a th:href="@{/expense/detail?year={y}&month={m}(y=*{year},m=*{month})}" th:object="${monthly}" th:each="monthly,index : ${monthlyList}" style="cursor:pointer;text-decoration: none; border-radius:10px;" class="d-flex flex-row justify-content-between items-center border px-3 py-3 mb-4  text-dark" th:classappend="${index.index %2 == 0?'':'bg-light'}">
+ 			<span th:text="*{title}" class="col-5"></span>
+ 			<span th:text="${#numbers.formatDecimal(monthly.total, 0, 'COMMA', 0, 'POINT' )}+' JPY' " class="col-5 d-flex justify-content-end "></span>
+ 			<span class="col-1 d-flex justify-content-end"><i class="bi bi-caret-right"></i></span>
+ 		</a>
+	</div>
+	<div th:replace="fragment/common::footer('Spring Boot - Mybatis Tutorial','By Aar Kar & Amie')"></div>
+</body>
+</html>

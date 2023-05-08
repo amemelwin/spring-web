@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/common :: head('Study Mybatis With Me')">
+<style>
+	.form-control:focus{
+        box-shadow: none;
+        border:none;
+    }
+</style>
+</head>
+<body>
+	<div th:replace="fragment/common :: header('Create Page')" ></div>
+	<div class="mx-auto d-flex flex-row my-4 w-50"><a th:href="@{/}" style="text-decoration:none;">家計費一覧</a>　/ 登録</div>
+	<form th:action="@{/expense/create}" method="post" th:object="${expense}">
+		<div class="mx-auto border w-50 px-5 py-4 " style="border-radius:10px">
+		  <div class="form-group">
+		    <label for="date">日付</label>
+		    <input type="date" class="form-control  mt-2 mb-3" style="border-radius:10px" id="date" th:field="*{date}" >
+		    <div class="alert alert-warning" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+		  </div>
+		  <div class="form-group">
+		    <label for="title">テーマ</label>
+		    <input type="text" class=" form-control mt-2 mb-3" style="border-radius:10px" id="title" th:field="*{title}" >
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>		    
+		  </div>
+		
+		  <div class="form-group">
+		    <label class="sr-only" for="expense">費用</label>		    
+		    <div class="input-group d-flex flex-row  mt-2 mb-3 ">			   
+			    <input type="text" class="form-control " style="border-radius:10px 0px 0px 10px;  " id="expense" th:field="*{expense}" >
+			     <div class="input-group-prepend">
+			      <div class="input-group-text  " style="border-radius:0px 10px 10px 0px;">JPY</div>
+			    </div>
+			  </div>
+		  </div>
+		    <div class="alert alert-warning" th:if="${#fields.hasErrors('expense')}" >Expense should be greater zero</div>	
+		</div>	
+		<div class="mx-auto w-50 d-flex flex-row justify-content-between my-4">
+			<a th:href="@{/expense/create}" class="btn-warning text-decoration-none  py-1 text-center rounded " style="width:200px">キャンセル</a>
+			<button type="submit" class="btn-primary text-decoration-none py-1 text-center rounded " style="width:200px">登録</button>
+		</div>
+	</form>
+	 <div th:replace="fragment/common::footer('Spring Boot - Mybatis Tutorial','By Aar Kar & Amie')"></div>
+	</body>
+</html>

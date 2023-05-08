@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.expense.system.repository.ExpenseMapper">
+
+	<select id="getAllExpense"
+		resultType="com.expense.system.entity.MonthlyExpense">
+		SELECT year,month, SUM(expense) total
+		FROM (
+		SELECT
+		id,
+		extract(year from date) "year",
+		date_part('month',date) "month",
+		title,
+		expense
+		FROM monthly_expense) m
+		GROUP BY year,month
+		ORDER BY year,month
+	</select>
+
+	<select id="expenseDetail" resultType="com.expense.system.entity.Expense">
+		SELECT *
+		FROM monthly_expense
+		WHERE date_part('year',date) = #{year}
+		AND date_part('month',date) = #{month}
+		ORDER BY date,title
+	</select>
+
+	<insert id="create">
+		INSERT INTO monthly_expense(date,title,expense)
+		VALUES(#{date},#{title},#{expense})
+	</insert>
+
+	<select id="getExpense" resultType="com.expense.system.entity.Expense">
+		SELECT *
+		FROM monthly_expense
+		WHERE id = #{id}
+	</select>
+
+	<update id="updateExpense">
+		UPDATE monthly_expense
+		SET date=#{date},
+		title=#{title},
+		expense=#{expense}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteExpense">
+		DELETE FROM monthly_expense
+		WHERE id=#{id}
+	</delete>
+
+	<!-- API -->
+	<select id="latestExpense" resultType="com.expense.system.entity.Expense"> 
+		SELECT * FROM monthly_expense
+		WHERE id= (SELECT MAX(id) fROM monthly_expense)
+	</select>
+	
+
+</mapper>
