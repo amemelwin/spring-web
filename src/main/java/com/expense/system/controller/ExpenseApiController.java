@@ -82,7 +82,7 @@ public class ExpenseApiController {
 		if (expense != null) {
 			return new ResponseEntity<>(expense, HttpStatus.OK);
 		} else {
-			return new ErrorResponse().response();
+			return new ErrorResponse("Your Expense Id "+id+" not found").response();
 		}
 	}
 
@@ -117,7 +117,7 @@ public class ExpenseApiController {
 			this.expenseService.deleteExpense(expense);
 			return new ResponseEntity<>(expense,HttpStatus.OK);
 		}else {
-			return new ErrorResponse().response();
+			return new ErrorResponse("Your Expense Id "+id+" not Found").response();
 			
 		}
 		
