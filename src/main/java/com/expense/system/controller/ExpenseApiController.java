@@ -39,8 +39,15 @@ public class ExpenseApiController {
 	Helper helper;
 	// Path
 	/*
-	 * Example Usage /getuser/1 GET @PathVariable /createuser POST @ModelAttribute
-	 * /deleteuser/3 DELETE @PathVariable /updateuser PUT or POST @ModelAttribute
+	 * Example Usage 
+	 * /getuser/1 
+	 * GET @PathVariable 
+	 * /createuser 
+	 * POST @ModelAttribute
+	 * /deleteuser/3 
+	 * DELETE @PathVariable 
+	 * /updateuser 
+	 * PUT or POST @ModelAttribute
 	 */
 	// @ResponseBody / Since @RestController, no need
 	@GetMapping("/learn/{id}/{name}") // localhost:8080/api/v1/learn/4/Amie
@@ -49,7 +56,9 @@ public class ExpenseApiController {
 	}
 
 	// Request Parameter
-	@GetMapping("/learn") // localhost:8080/api/v1/learn?firstname=Aar Kar&lastname=Mann Aung&age=26
+	// localhost:8080/api/v1/learn?firstname=Aar Kar&lastname=Mann Aung&age=26
+	// localhost:8080/api/v1/learn/Aar  Kar/Mann Aung/26
+	@GetMapping("/learn") 
 	public String learn(@RequestParam String firstname, @RequestParam String lastname, @RequestParam int age) {
 		return firstname + " " + lastname + " is " + age;
 	}
@@ -106,7 +115,7 @@ public class ExpenseApiController {
 			this.expenseService.updateExpense(expense);	
 			return new ResponseEntity<>(expense,HttpStatus.OK);
 		}else {
-			return new ErrorResponse().response();			
+			return new ErrorResponse().response();
 		}		
 	}
 	
@@ -120,7 +129,5 @@ public class ExpenseApiController {
 			return new ErrorResponse("Your Expense Id "+id+" not Found").response();
 			
 		}
-		
-		
 	}
 }
