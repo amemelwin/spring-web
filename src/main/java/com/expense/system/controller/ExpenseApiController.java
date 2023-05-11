@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.expense.system.entity.Expense;
-import com.expense.system.form.MonthlyExpenseForm;
 import com.expense.system.service.ExpenseService;
 import com.expense.system.handler.ErrorResponse;
 import com.expense.system.helper.Helper;
+import com.expense.system.model.MonthlyExpenseModel;
 
-import jakarta.validation.Valid;
+//import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -37,6 +37,9 @@ public class ExpenseApiController {
 
 	@Autowired
 	Helper helper;
+	
+	// Learning Purpose Note!
+	
 	// Path
 	/*
 	 * Example Usage 
@@ -62,12 +65,11 @@ public class ExpenseApiController {
 	public String learn(@RequestParam String firstname, @RequestParam String lastname, @RequestParam int age) {
 		return firstname + " " + lastname + " is " + age;
 	}
-
-	// [MonthlyExpenseForm(title=2022/1, year=2022, month=1, total=3500),
-	// MonthlyExpenseForm(title=2023/4, year=2023, month=4, total=200)]
+	// Learning Purpose Note!
+	
 	@GetMapping("/expense/get-monthly")
 	public ResponseEntity getExpense() {
-		List<MonthlyExpenseForm> monthlyExpenseList = this.expenseService.getAllExpense();
+		List<MonthlyExpenseModel> monthlyExpenseList = this.expenseService.getAllExpense();
 		if (monthlyExpenseList.size() > 0) {
 			return new ResponseEntity<>(monthlyExpenseList, HttpStatus.OK);
 		} else {
@@ -96,7 +98,7 @@ public class ExpenseApiController {
 	}
 
 	@PostMapping("/expense/create")
-	public ResponseEntity createExpense(@Valid @ModelAttribute Expense expense, BindingResult result) {
+	public ResponseEntity createExpense(@ModelAttribute Expense expense, BindingResult result) {
 		if (result.hasErrors()) {
 			return new ErrorResponse(this.helper.formErrorExtractor(result)).response();
 //			return new ResponseEntity<>(this.helper.formErrorExtractor(result), HttpStatus.CONFLICT);			

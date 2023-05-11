@@ -12,23 +12,23 @@ import java.util.Date;
 
 import com.expense.system.entity.Expense;
 import com.expense.system.entity.MonthlyExpense;
-import com.expense.system.form.MonthlyExpenseForm;
+import com.expense.system.model.MonthlyExpenseModel;
 
 import lombok.Data;
 
 @Service
 public class Helper {
-	public List<MonthlyExpenseForm> monthlyExpenseToForm(List<MonthlyExpense> monthlyExpense) {
+	public List<MonthlyExpenseModel> monthlyExpenseToForm(List<MonthlyExpense> monthlyExpense) {
 
-		List<MonthlyExpenseForm> monthlyExpenseForm = new ArrayList<MonthlyExpenseForm>();
+		List<MonthlyExpenseModel> monthlyExpenseForm = new ArrayList<MonthlyExpenseModel>();
 
 		for (MonthlyExpense expense : monthlyExpense) {
-			MonthlyExpenseForm newForm = new MonthlyExpenseForm();
-			newForm.setYear(expense.getYear());
-			newForm.setMonth(expense.getMonth());
-			newForm.setTitle(expense.getYear() + "/" + expense.getMonth());
-			newForm.setTotal(expense.getTotal());		
-			monthlyExpenseForm.add(newForm);
+			MonthlyExpenseModel expenseModel = new MonthlyExpenseModel();
+			expenseModel.setYear(expense.getYear());
+			expenseModel.setMonth(expense.getMonth());
+			expenseModel.setTitle(expense.getYear() + "/" + expense.getMonth());
+			expenseModel.setTotal(expense.getTotal());		
+			monthlyExpenseForm.add(expenseModel);
 		}
 		return monthlyExpenseForm;
 	}

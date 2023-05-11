@@ -1,12 +1,11 @@
-package com.expense.system.form;
+package com.expense.system.model;
 
 import lombok.Data;
 
 @Data
-public class MonthlyExpenseForm {
+public class MonthlyExpenseModel {
 	private String title;
 	private int year;
 	private int month;
 	private int total;
-
 }

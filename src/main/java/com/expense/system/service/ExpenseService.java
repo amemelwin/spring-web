@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import java.util.List;
 
 import com.expense.system.entity.Expense;
-import com.expense.system.form.MonthlyExpenseForm;
 import com.expense.system.helper.Helper;
+import com.expense.system.model.MonthlyExpenseModel;
 import com.expense.system.repository.ExpenseMapper;
 
 @Service
@@ -19,7 +19,7 @@ public class ExpenseService {
 	@Autowired
 	Helper helper;
 	
-	public List<MonthlyExpenseForm> getAllExpense() {
+	public List<MonthlyExpenseModel> getAllExpense() {
 		return this.helper.monthlyExpenseToForm(this.expenseMapper.getAllExpense());
 	}
 	

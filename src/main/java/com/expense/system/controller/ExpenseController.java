@@ -1,6 +1,10 @@
 package com.expense.system.controller;
 
 import java.util.Date;
+import java.util.Locale;
+import java.util.Set;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,11 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.expense.system.entity.Expense;
+import com.expense.system.form.ExpenseForm;
 import com.expense.system.helper.Helper;
 import com.expense.system.helper.Helper.DateBox;
 import com.expense.system.service.ExpenseService;
 
-import jakarta.validation.Valid;
+//import jakarta.validation.Valid;
 
 @Controller
 public class ExpenseController {
@@ -42,18 +47,19 @@ public class ExpenseController {
 
 	@GetMapping("/expense/create")
 	public String create(Model model) {
-		Expense expense = new Expense();
-		expense.setDate(new Date());
-		model.addAttribute("expense", expense);
+		ExpenseForm expenseForm = new ExpenseForm();
+		expenseForm.setDate(new Date());
+		model.addAttribute("expenseForm", expenseForm);
 		return "screen/create";
 	}
 
 	@PostMapping("/expense/create")
-	public String create(@Valid @ModelAttribute Expense expense, BindingResult result) {
+	public String create(@Valid @ModelAttribute ExpenseForm expenseForm, BindingResult result, Model model) {
 		if(result.hasErrors()) {
 			return "screen/create";
 		}
-		this.expenseService.create(expense);
+
+//		this.expenseService.create(expenseForm);	
 		return "redirect:/";
 	}
 
