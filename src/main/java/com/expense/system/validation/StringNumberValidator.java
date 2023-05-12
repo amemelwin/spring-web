@@ -14,6 +14,7 @@ public class StringNumberValidator implements
     @Override
     public boolean isValid(String contactField,
       ConstraintValidatorContext cxt) {
+    	System.out.println("Inner Validator");
         return contactField != null && contactField.matches("[0-9]+")
           && (contactField.length() > 8) && (contactField.length() < 14);
     }

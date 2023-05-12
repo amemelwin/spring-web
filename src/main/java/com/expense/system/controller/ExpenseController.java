@@ -55,7 +55,10 @@ public class ExpenseController {
 
 	@PostMapping("/expense/create")
 	public String create(@Valid @ModelAttribute ExpenseForm expenseForm, BindingResult result, Model model) {
+		System.out.println(expenseForm.getExpense());
+		System.out.println(result);
 		if(result.hasErrors()) {
+			System.out.println(result);
 			return "screen/create";
 		}
 

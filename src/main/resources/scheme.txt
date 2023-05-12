@@ -1,0 +1,22 @@
+-- child table must be remove
+-- before parent table
+-- db name = 'expense'
+Drop Table If Exists monthly_expense;
+Create Table monthly_expense (
+	id SERIAL NOT NULL,
+	date date NOT NULL,
+	title varchar(199) NOT NULL,
+	expense int NOT NULL,
+	PRIMARY KEY(id)
+);
+
+-- simple data
+INSERT INTO monthly_expense(date,title,expense)
+VALUES
+('2023-05-01','coffee', 1500),
+('2023-05-02','coffee', 1500),
+('2023-05-03','coffee', 1500),
+('2023-05-04','coffee', 1500),
+('2023-05-09','coffee', 1500),
+('2023-05-10','coffee', 1500);
+

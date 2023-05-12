@@ -2,18 +2,16 @@ package com.expense.system.form;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.expense.system.validation.StringNumberConstraint;
 
-//import org.springframework.format.annotation.DateTimeFormat;
-
-//import jakarta.validation.constraints.NotBlank;
-//import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class ExpenseForm {
 
-//	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 //	@NotNull(message="Date is required")
 	private Date date;
 
@@ -21,6 +19,5 @@ public class ExpenseForm {
 	private String title;
 	
 //	@NotBlank(message="expense is required")
-	@StringNumberConstraint
 	private String expense;
 }
