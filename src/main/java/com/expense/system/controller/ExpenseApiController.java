@@ -3,6 +3,7 @@ package com.expense.system.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,13 +11,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.expense.system.entity.Expense;
+import com.expense.system.form.ExpenseForm;
 import com.expense.system.service.ExpenseService;
+import com.expense.system.validation.ExpenseValidator;
+
+import jakarta.validation.Valid;
+
 import com.expense.system.handler.ErrorResponse;
 import com.expense.system.helper.Helper;
 import com.expense.system.model.MonthlyExpenseModel;
@@ -26,7 +31,6 @@ import com.expense.system.model.MonthlyExpenseModel;
 import java.util.List;
 
 //@Controller
-// Fighting Amie 
 @SuppressWarnings("rawtypes")
 @RestController // @Controller + @ResponseBody
 @RequestMapping(path = "${apiPrefix}")
@@ -37,36 +41,7 @@ public class ExpenseApiController {
 
 	@Autowired
 	Helper helper;
-	
-	// Learning Purpose Note!
-	
-	// Path
-	/*
-	 * Example Usage 
-	 * /getuser/1 
-	 * GET @PathVariable 
-	 * /createuser 
-	 * POST @ModelAttribute
-	 * /deleteuser/3 
-	 * DELETE @PathVariable 
-	 * /updateuser 
-	 * PUT or POST @ModelAttribute
-	 */
-	// @ResponseBody / Since @RestController, no need
-	@GetMapping("/learn/{id}/{name}") // localhost:8080/api/v1/learn/4/Amie
-	public String learn(@PathVariable int id, @PathVariable String name) {
-		return name + "  is Learning page " + id;
-	}
 
-	// Request Parameter
-	// localhost:8080/api/v1/learn?firstname=Aar Kar&lastname=Mann Aung&age=26
-	// localhost:8080/api/v1/learn/Aar  Kar/Mann Aung/26
-	@GetMapping("/learn") 
-	public String learn(@RequestParam String firstname, @RequestParam String lastname, @RequestParam int age) {
-		return firstname + " " + lastname + " is " + age;
-	}
-	// Learning Purpose Note!
-	
 	@GetMapping("/expense/get-monthly")
 	public ResponseEntity getExpense() {
 		List<MonthlyExpenseModel> monthlyExpenseList = this.expenseService.getAllExpense();
@@ -93,43 +68,56 @@ public class ExpenseApiController {
 		if (expense != null) {
 			return new ResponseEntity<>(expense, HttpStatus.OK);
 		} else {
-			return new ErrorResponse("Your Expense Id "+id+" not found").response();
+			return new ErrorResponse("Your Expense Id " + id + " not found").response();
 		}
 	}
 
 	@PostMapping("/expense/create")
-	public ResponseEntity createExpense(@ModelAttribute Expense expense, BindingResult result) {
+	public ResponseEntity createExpense(@Valid @ModelAttribute ExpenseForm expenseForm, BindingResult result,
+			Model model) {
 		if (result.hasErrors()) {
 			return new ErrorResponse(this.helper.formErrorExtractor(result)).response();
-//			return new ResponseEntity<>(this.helper.formErrorExtractor(result), HttpStatus.CONFLICT);			
 		}
-		this.expenseService.create(expense);
-		Expense latestExpense = this.expenseService.latestExpense();
-		return new ResponseEntity<>(latestExpense, HttpStatus.CREATED);
-
+		// custom validator
+		ExpenseValidator expenseValidate = new ExpenseValidator(expenseForm, model);
+		if (!expenseValidate.validate()) {
+			return new ErrorResponse(expenseValidate.getErrors().toString()).response();
+		}
+		// custom validator
+		this.expenseService.create(expenseForm.toExpense());
+		return new ResponseEntity<>(this.expenseService.latestExpense(), HttpStatus.CREATED);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@PutMapping("/expense/update/{id}")
-	public ResponseEntity<Expense> updateExpense(@RequestBody Expense expense,@PathVariable int id) {	
-		expense.setId(id);
-		if(this.expenseService.getExpense(id) != null) {
-			this.expenseService.updateExpense(expense);	
-			return new ResponseEntity<>(expense,HttpStatus.OK);
-		}else {
-			return new ErrorResponse().response();
-		}		
+	public ResponseEntity<Expense> updateExpense(@Valid @ModelAttribute ExpenseForm expenseForm, @PathVariable int id,
+			BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return new ErrorResponse(this.helper.formErrorExtractor(result)).response();
+		}
+		// custom validator
+		ExpenseValidator expenseValidate = new ExpenseValidator(expenseForm, model);
+		if (!expenseValidate.validate()) {
+			return new ErrorResponse(expenseValidate.getErrors().toString()).response();
+		}
+		// check duplicate
+		if (this.expenseService.getExpense(id) == null) {
+			return new ErrorResponse("Expence Not found!").response();
+		}
+		this.expenseService.updateExpense(expenseForm.toExpense());
+		return new ResponseEntity<>(expenseForm.toExpense(), HttpStatus.CREATED);
 	}
-	
+
 	@DeleteMapping("/expense/delete/{id}")
 	public ResponseEntity deleteExpense(@PathVariable int id) {
 		Expense expense = this.expenseService.getExpense(id);
-		if(expense !=null ) {
+		if (expense != null) {
 			this.expenseService.deleteExpense(expense);
-			return new ResponseEntity<>(expense,HttpStatus.OK);
-		}else {
-			return new ErrorResponse("Your Expense Id "+id+" not Found").response();
-			
+			return new ResponseEntity<>(expense, HttpStatus.OK);
+		} else {
+			return new ErrorResponse("Your Expense Id " + id + " not Found").response();
+
 		}
 	}
+
 }

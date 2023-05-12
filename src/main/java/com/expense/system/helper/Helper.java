@@ -1,4 +1,5 @@
 package com.expense.system.helper;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -27,48 +28,51 @@ public class Helper {
 			expenseModel.setYear(expense.getYear());
 			expenseModel.setMonth(expense.getMonth());
 			expenseModel.setTitle(expense.getYear() + "/" + expense.getMonth());
-			expenseModel.setTotal(expense.getTotal());		
+			expenseModel.setTotal(expense.getTotal());
 			monthlyExpenseForm.add(expenseModel);
 		}
 		return monthlyExpenseForm;
 	}
-	public void prepareForDetail(List<Expense> expenses,Model model) {
-		int total =0;
-		for(Expense expense:expenses ) {
+
+	public void prepareForDetail(List<Expense> expenses, Model model) {
+		int total = 0;
+		for (Expense expense : expenses) {
 			total += expense.getExpense();
 		}
-		model.addAttribute("expenseList",expenses);
-		model.addAttribute("total",total);		
+		model.addAttribute("expenseList", expenses);
+		model.addAttribute("total", total);
 	}
-	
+
 	@Data
 	public class DateBox {
 		String year;
 		String month;
 		String day;
-		DateBox(String year,String month,String day){
+
+		DateBox(String year, String month, String day) {
 			this.year = year;
 			this.month = month;
 			this.day = day;
 		}
 	}
+
 	public DateBox dateSplitter(Date date) {
 		SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 		SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
 		SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
 		String year = yearFormat.format(date);
 		String month = monthFormat.format(date);
-		String day = dayFormat.format(date);		
-		return new DateBox(year,month,day);		
+		String day = dayFormat.format(date);
+		return new DateBox(year, month, day);
 	}
-	
-	//Api
+
+	// Api
 	public String formErrorExtractor(BindingResult result) {
 		List<String> errorMsgs = new ArrayList<>();
-		for(ObjectError error:result.getAllErrors()) {
-			errorMsgs.add(error.getDefaultMessage());		
+		for (ObjectError error : result.getAllErrors()) {
+			errorMsgs.add(error.getDefaultMessage());
 		}
-		return errorMsgs.toString();	
+		return errorMsgs.toString();
 	}
-	
+
 }

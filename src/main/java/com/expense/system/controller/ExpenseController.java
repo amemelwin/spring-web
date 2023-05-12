@@ -1,10 +1,6 @@
 package com.expense.system.controller;
 
 import java.util.Date;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +17,9 @@ import com.expense.system.form.ExpenseForm;
 import com.expense.system.helper.Helper;
 import com.expense.system.helper.Helper.DateBox;
 import com.expense.system.service.ExpenseService;
+import com.expense.system.validation.ExpenseValidator;
+
+import jakarta.validation.Valid;
 
 //import jakarta.validation.Valid;
 
@@ -29,7 +28,7 @@ public class ExpenseController {
 
 	@Autowired
 	ExpenseService expenseService;
-	
+
 	@Autowired
 	Helper helper;
 
@@ -55,39 +54,42 @@ public class ExpenseController {
 
 	@PostMapping("/expense/create")
 	public String create(@Valid @ModelAttribute ExpenseForm expenseForm, BindingResult result, Model model) {
-		System.out.println(expenseForm.getExpense());
-		System.out.println(result);
-		if(result.hasErrors()) {
-			System.out.println(result);
+		ExpenseValidator expenseValidate = new ExpenseValidator(expenseForm, model);
+		if (result.hasErrors() || !expenseValidate.validate()) {
 			return "screen/create";
 		}
-
-//		this.expenseService.create(expenseForm);	
+		this.expenseService.create(expenseForm.toExpense());
 		return "redirect:/";
 	}
 
 	@GetMapping("/update-expense/{id}")
 	public String updateExpense(Model model, @PathVariable int id) {
-		model.addAttribute("expense", this.expenseService.getExpense(id));
+		model.addAttribute("expenseForm", this.expenseService.getExpense(id).toExpenseForm());
 		return "screen/update";
 	}
-	
+
 	@PostMapping("/update-expense")
-	public String updateExpense(@ModelAttribute Expense expense) {
-		this.expenseService.updateExpense(expense);
-		DateBox date= this.helper.dateSplitter(expense.getDate());
+	public String updateExpense(@Valid @ModelAttribute ExpenseForm expenseForm, BindingResult result, Model model) {
+		ExpenseValidator expenseValidate = new ExpenseValidator(expenseForm, model);
+		if (result.hasErrors() || !expenseValidate.validate()) {
+			return "screen/update";
+		}
+		this.expenseService.updateExpense(expenseForm.toExpense());
+
+		DateBox date= this.helper.dateSplitter(expenseForm.getDate());
 		return String.format("redirect:/expense/detail?year=%s&month=%s",date.getYear(),date.getMonth());
 	}
-	
+
 	@PostMapping("/expense/delete/{id}")
 	public String deleteExpense(@PathVariable int id) {
 		Expense expense = this.expenseService.getExpense(id);
 		DateBox date = this.helper.dateSplitter(expense.getDate());
-		this.expenseService.deleteExpense(expense);		
-		boolean isDetailExit = this.expenseService.isDetailExit(Integer.parseInt(date.getYear()), Integer.parseInt(date.getMonth()));
-		return isDetailExit? String.format("redirect:/expense/detail?year=%s&month=%s",date.getYear(),date.getMonth()):"redirect:/";
-//		return "redirect:/";
-		
+		this.expenseService.deleteExpense(expense);
+		boolean isDetailExit = this.expenseService.isDetailExit(Integer.parseInt(date.getYear()),
+				Integer.parseInt(date.getMonth()));
+		return isDetailExit
+				? String.format("redirect:/expense/detail?year=%s&month=%s", date.getYear(), date.getMonth())
+				: "redirect:/";
 	}
 
 }

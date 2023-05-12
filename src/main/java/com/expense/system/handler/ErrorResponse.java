@@ -12,15 +12,16 @@ import lombok.Data;
 public class ErrorResponse {
 	public HttpStatus httpStatus = HttpStatus.CONFLICT;
 	public String message = "Unknown Error Occour!";
-	
+
 	// No Argument Constructor
-	public ErrorResponse() {}
-	
+	public ErrorResponse() {
+	}
+
 	// One Argument Constructor
 	public ErrorResponse(String message) {
 		this.message = message;
 	}
-	
+
 	// Two Argument Constructor (httpStatus, message)
 	public ErrorResponse(HttpStatus httpStatus, String message) {
 		this.httpStatus = httpStatus;
@@ -28,27 +29,23 @@ public class ErrorResponse {
 	}
 
 	// Two Argument Constructor (message, httpStatus)
-	public ErrorResponse(String message,HttpStatus httpStatus) {
+	public ErrorResponse(String message, HttpStatus httpStatus) {
 		this.httpStatus = httpStatus;
 		this.message = message;
 	}
-	
+
 	@Data
 	public class ErrorMessage {
 		public int code;
 		public String message;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public ResponseEntity response() {
 		ErrorMessage errorMessage = new ErrorMessage();
 		errorMessage.setCode(this.httpStatus.value());
 		errorMessage.setMessage(this.message.toString());
-		return ResponseEntity
-				.status(this.httpStatus)
-				.body(errorMessage);
+		return ResponseEntity.status(this.httpStatus).body(errorMessage);
 	}
-
-	
 
 }

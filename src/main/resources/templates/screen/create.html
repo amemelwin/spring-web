@@ -16,12 +16,12 @@
 		  <div class="form-group">
 		    <label for="date">日付</label>
 		    <input type="date" class="form-control  mt-2 mb-3" style="border-radius:10px" id="date" th:field="*{date}" >
-		    <!-- <div class="alert alert-warning" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div> -->
+		    <div class="alert alert-warning" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
 		  </div>
 		  <div class="form-group">
 		    <label for="title">テーマ</label>
 		    <input type="text" class=" form-control mt-2 mb-3" style="border-radius:10px" id="title" th:field="*{title}" >
-            <!-- <div class="alert alert-warning" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div> -->		    
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>	    
 		  </div>
 		
 		  <div class="form-group">
@@ -34,14 +34,14 @@
 			  </div>
 		  </div>
 		  <div class="alert alert-warning" th:if="${#fields.hasErrors('expense')}" th:errors="*{expense}"></div>
-		  <!-- <div class="alert alert-warning" th:text="${#fields.errors('title'}"></div> -->
-		  <!-- <div class="alert alert-warning" th:if="${#fields.hasErrors('expense')}" >Expense should be greater zero</div> -->
+		  <div class="alert alert-warning" th:if="${expense_error}" th:text="${expense_error}"></div>
 		</div>	
 		<div class="mx-auto w-50 d-flex flex-row justify-content-between my-4">
 			<a th:href="@{/expense/create}" class="btn-warning text-decoration-none  py-1 text-center rounded " style="width:200px">キャンセル</a>
 			<button type="submit" class="btn-primary text-decoration-none py-1 text-center rounded " style="width:200px">登録</button>
 		</div>
 	</form>
+	<div class="my-5 py-5"></div>
 	 <div th:replace="fragment/common::footer('Spring Boot - Mybatis Tutorial','By Aar Kar Mann Aung')"></div>
 	</body>
 </html>

@@ -10,26 +10,26 @@ import com.expense.system.entity.MonthlyExpense;
 
 @Mapper
 public interface ExpenseMapper {
-	
+
 	// get all expense by Monthly
 	public List<MonthlyExpense> getAllExpense();
-	
-	//detail
+
+	// detail
 	public List<Expense> expenseDetail(@Param("year") int year, @Param("month") int month);
-	
+
 	// create new expense
 	public void create(Expense expense);
-	
+
 	// get expense by Id
 	public Expense getExpense(@Param("id") int id);
-	
-	// update expense 
+
+	// update expense
 	public void updateExpense(Expense expense);
-	
+
 	// delete expense
 	public void deleteExpense(Expense expense);
-	
-	//API
+
+	// API
 	public Expense latestExpense();
 
 }
